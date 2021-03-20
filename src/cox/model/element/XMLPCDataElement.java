@@ -35,6 +35,12 @@ public class XMLPCDataElement extends XMLElement
 	{
 		return this.value;
 	}
+	
+	@Override
+	public boolean isPCData()
+	{
+		return true;
+	}
 
 	@Override
 	public Collection<XMLAttribute> getAttributes()

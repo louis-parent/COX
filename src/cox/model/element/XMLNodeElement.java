@@ -42,6 +42,12 @@ public class XMLNodeElement extends XMLElement
 			return child.getValue();
 		}).collect(Collectors.joining("\n"));
 	}
+	
+	@Override
+	public boolean isPCData()
+	{
+		return false;
+	}
 
 	@Override
 	public Collection<XMLAttribute> getAttributes()

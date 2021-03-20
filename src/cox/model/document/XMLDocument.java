@@ -15,4 +15,9 @@ public interface XMLDocument
 	{
 		return this.getRoot().equals(doc.getRoot());
 	}
+	
+	public static XMLDocument getEmpty()
+	{
+		return new SimpleXMLDocument(null);
+	}
 }

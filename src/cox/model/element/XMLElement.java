@@ -23,6 +23,8 @@ public abstract class XMLElement
 	public abstract String getTagName();
 
 	public abstract String getValue();
+	
+	public abstract boolean isPCData();
 
 	public abstract Collection<XMLAttribute> getAttributes();
 
