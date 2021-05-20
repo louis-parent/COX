@@ -68,4 +68,25 @@ public class TestXMLParsing
 
 		asserts(that(doc.getRoot()).isEqualTo(root));
 	}
+	
+	@Test
+	public void testMinimalXMLDeclaration() throws COXParserException
+	{
+		XMLDocument doc = COXParser.parse("<?xml version=\"1.1\"?><root></root>");
+		asserts(that(doc.getVersion()).isEqualTo("1.1").and(that(doc.getEncoding()).isEqualTo("UTF-8")).and(that(doc.isStandalone()).isEqualTo(false)));
+	}
+	
+	@Test
+	public void testMinimalXMLDeclarationWithEncoding() throws COXParserException
+	{
+		XMLDocument doc = COXParser.parse("<?xml version=\"1.1\" encoding=\"UTF-16\"?><root></root>");
+		asserts(that(doc.getVersion()).isEqualTo("1.1").and(that(doc.getEncoding()).isEqualTo("UTF-16")).and(that(doc.isStandalone()).isEqualTo(false)));
+	}
+	
+	@Test
+	public void testMinimalXMLDeclarationWithEncodingAndStandalone() throws COXParserException
+	{
+		XMLDocument doc = COXParser.parse("<?xml version=\"1.1\" encoding=\"UTF-16\" standalone=\"yes\"?><root></root>");
+		asserts(that(doc.getVersion()).isEqualTo("1.1").and(that(doc.getEncoding()).isEqualTo("UTF-16")).and(that(doc.isStandalone()).isEqualTo(true)));
+	}
 }

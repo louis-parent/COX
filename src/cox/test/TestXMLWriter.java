@@ -3,11 +3,14 @@ package cox.test;
 import static jul.nla.Asserts.asserts;
 import static jul.nla.Asserts.that;
 
+import java.util.Arrays;
+
 import cox.model.document.SimpleXMLDocument;
 import cox.model.document.XMLDocument;
 import cox.model.element.XMLElement;
 import cox.model.element.XMLNodeElement;
 import cox.model.element.XMLPCDataElement;
+import cox.model.pi.SimpleProcessingInstruction;
 import cox.writer.XMLOutputOptions;
 import cox.writer.XMLWriter;
 import jul.annotations.Test;
@@ -109,5 +112,49 @@ public class TestXMLWriter
 		XMLDocument document = new SimpleXMLDocument(root);
 
 		asserts(that(XMLWriter.write(document, XMLOutputOptions.INDENT, XMLOutputOptions.SIMPLIFY_ORPHANS)).hasToString("<root>\n\t<child>\n\t\t<subchild1/>\n\t\t<subchild2/>\n\t</child>\n</root>"));
+	}
+	
+	@Test
+	public void testWriteDocumentWithDefaultXMLDeclaration()
+	{
+		XMLElement root = new XMLNodeElement("root");
+		SimpleXMLDocument document = new SimpleXMLDocument(root);
+		
+		asserts(that(XMLWriter.write(document, XMLOutputOptions.WRITE_DECLARATION)).hasToString("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><root></root>"));
+	}
+	
+	@Test
+	public void testWriteDocumentWithDefaultIndentedXMLDeclaration()
+	{
+		XMLElement root = new XMLNodeElement("root");
+		SimpleXMLDocument document = new SimpleXMLDocument(root);
+		
+		asserts(that(XMLWriter.write(document, XMLOutputOptions.WRITE_DECLARATION, XMLOutputOptions.INDENT)).hasToString("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<root>\n</root>"));
+	}
+	
+	@Test
+	public void testWriteDocumentWithCustomXMLDeclaration()
+	{
+		XMLElement root = new XMLNodeElement("root");
+		SimpleXMLDocument document = new SimpleXMLDocument("1.1", "UTF-16", true, root);
+		
+		asserts(that(XMLWriter.write(document, XMLOutputOptions.WRITE_DECLARATION)).hasToString("<?xml version=\"1.1\" encoding=\"UTF-16\" standalone=\"yes\"?><root></root>"));
+	}
+	
+	@Test
+	public void testWriteDocumentWithCustomXMLDeclarationAndCustomProcessingInstruction()
+	{
+		XMLElement root = new XMLNodeElement("root");
+		SimpleXMLDocument document = new SimpleXMLDocument("1.1", "UTF-16", true, root, Arrays.asList(new SimpleProcessingInstruction("custom-key", Arrays.asList("custom-value"))));
+		
+		asserts(that(XMLWriter.write(document, XMLOutputOptions.WRITE_DECLARATION)).hasToString("<?xml version=\"1.1\" encoding=\"UTF-16\" standalone=\"yes\"?><?custom-key custom-value?><root></root>"));
+	}
+	@Test
+	public void testWriteDocumentWithIndentedCustomXMLDeclarationAndCustomProcessingInstruction()
+	{
+		XMLElement root = new XMLNodeElement("root");
+		SimpleXMLDocument document = new SimpleXMLDocument("1.1", "UTF-16", true, root, Arrays.asList(new SimpleProcessingInstruction("custom-key", Arrays.asList("custom-value"))));
+		
+		asserts(that(XMLWriter.write(document, XMLOutputOptions.WRITE_DECLARATION, XMLOutputOptions.INDENT)).hasToString("<?xml version=\"1.1\" encoding=\"UTF-16\" standalone=\"yes\"?>\n<?custom-key custom-value?>\n<root>\n</root>"));
 	}
 }

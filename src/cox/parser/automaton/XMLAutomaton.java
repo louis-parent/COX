@@ -2,17 +2,21 @@ package cox.parser.automaton;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.HashSet;
 
 import cox.model.document.SimpleXMLDocument;
 import cox.model.document.XMLDocument;
 import cox.model.element.XMLElement;
 import cox.model.element.XMLPCDataElement;
+import cox.model.pi.ProcessingInstruction;
 import cox.parser.automaton.state.ContentState;
 import cox.parser.automaton.state.StartState;
 import cox.parser.automaton.state.XMLAutomatonState;
 import cox.parser.exception.COXAutomatonException;
 import cox.parser.exception.COXParserException;
 import cox.parser.exception.parsing.InvalidContentOutsideTagException;
+import cox.parser.exception.parsing.MalformedXMLDeclarationException;
 import cox.parser.exception.parsing.MissingClosingTagException;
 import cox.parser.exception.parsing.MissingOpeningTagException;
 
@@ -20,11 +24,23 @@ public class XMLAutomaton
 {
 	private XMLElement root;
 	private XMLElement currentElement;
+	
+	private String version;
+	private String encoding;
+	private Boolean standalone;
+	
+	private Collection<ProcessingInstruction> processingInstructions;
 
 	private XMLAutomatonState state;
 
 	public XMLAutomaton(InputStream input) throws COXParserException
 	{
+		this.version = null;
+		this.encoding = null;
+		this.standalone = null;
+		this.processingInstructions = new HashSet<ProcessingInstruction>();
+		
+		
 		this.state = new StartState();
 		this.readAll(input);
 	}
@@ -77,6 +93,18 @@ public class XMLAutomaton
 			throw new MissingClosingTagException(tagName, this.currentElement.getTagName());
 		}
 	}
+	
+	public void putProcessingInstruction(ProcessingInstruction pi) throws COXAutomatonException
+	{
+		if(pi.getKey().equals("xml"))
+		{
+			this.parseXMLDeclaration(pi);
+		}
+		else
+		{
+			this.processingInstructions.add(pi);			
+		}
+	}
 
 	public void changeState(XMLAutomatonState state)
 	{
@@ -85,7 +113,11 @@ public class XMLAutomaton
 
 	public XMLDocument getDocument()
 	{
-		return new SimpleXMLDocument(this.root);
+		String version = this.version != null ? this.version : XMLDocument.DEFAULT_VERSION;
+		String encoding = this.encoding != null ? this.encoding : XMLDocument.DEFAULT_ENCODING;
+		boolean standalone = this.standalone != null ? this.standalone : XMLDocument.DEFAULT_STANDALONE;
+		
+		return new SimpleXMLDocument(version, encoding, standalone, this.root, this.processingInstructions);
 	}
 
 	private void readAll(InputStream input) throws COXParserException
@@ -139,6 +171,46 @@ public class XMLAutomaton
 		catch(IOException e)
 		{
 			throw new COXParserException("Parsing Error : " + e.getMessage(), (char) c, currentLine, currentChar);
+		}
+	}
+	
+	private void parseXMLDeclaration(ProcessingInstruction pi) throws COXAutomatonException
+	{
+		for(String piValue : pi.getValues())
+		{
+			String[] splitted = piValue.split("=");
+			
+			if(splitted.length == 2)
+			{
+				String key = splitted[0];
+				String value = "";
+				
+				if(splitted[1].startsWith("\"") && splitted[1].endsWith("\""))
+				{
+					value = splitted[1].substring(1, splitted[1].length()-1);
+					
+					if(key.equals("version"))
+					{
+						this.version = value;
+					}
+					else if(key.equals("encoding"))
+					{
+						this.encoding = value;
+					}
+					else if(key.equals("standalone"))
+					{
+						this.standalone = value.equals("yes");
+					}
+				}
+				else
+				{
+					throw new MalformedXMLDeclarationException();
+				}
+			}
+			else
+			{
+				throw new MalformedXMLDeclarationException();
+			}
 		}
 	}
 }

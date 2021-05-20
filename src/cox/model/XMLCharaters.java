@@ -12,7 +12,8 @@ public enum XMLCharaters
 	CLOSING_TAG_MARKER('/'),
 	ATTRIBUTE_KEY_VALUE_SEPARATOR('='),
 	ATTRIBUTE_DELIMITER('"'),
-	CHAR_ESCAPER('&');
+	CHAR_ESCAPER('&'),
+	PROCESSING_INSTRUCTION_DELIMITER('?');
 
 	private final char c;
 

@@ -1,9 +1,22 @@
 package cox.model.document;
 
+import java.util.Collection;
+
 import cox.model.element.XMLElement;
+import cox.model.pi.ProcessingInstruction;
 
 public interface XMLDocument
 {
+	public static final String DEFAULT_VERSION = "1.0";
+	public static final String DEFAULT_ENCODING = "UTF-8";
+	public static final boolean DEFAULT_STANDALONE = false;
+	
+	public abstract String getVersion();
+	public abstract String getEncoding();
+	public abstract boolean isStandalone();
+	
+	public abstract Collection<ProcessingInstruction> getProcessingInstructions();
+	
 	public abstract XMLElement getRoot();
 	
 	public default boolean isEmpty()

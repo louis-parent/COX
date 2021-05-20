@@ -23,8 +23,8 @@ public interface ParametrableXMLWriter
 		return this.getOptions().contains(XMLOutputOptions.TRIM_CONTENT);
 	}
 	
-	public default boolean hasToWriteHeader()
+	public default boolean hasToWriteDeclaration()
 	{
-		return this.getOptions().contains(XMLOutputOptions.WRITE_HEADERS);
+		return this.getOptions().contains(XMLOutputOptions.WRITE_DECLARATION);
 	}
 }
