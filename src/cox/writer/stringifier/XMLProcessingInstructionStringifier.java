@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import cox.model.document.XMLDocument;
-import cox.model.pi.ProcessingInstruction;
+import cox.model.pi.XMLProcessingInstruction;
 import cox.writer.XMLOutputOptions;
 
 public class XMLProcessingInstructionStringifier implements ParametrableXMLWriter
@@ -14,7 +14,7 @@ public class XMLProcessingInstructionStringifier implements ParametrableXMLWrite
 	
 	private Collection<XMLOutputOptions> options;
 	
-	public XMLProcessingInstructionStringifier(ProcessingInstruction pi, Collection<XMLOutputOptions> options)
+	public XMLProcessingInstructionStringifier(XMLProcessingInstruction pi, Collection<XMLOutputOptions> options)
 	{
 		this(pi.getKey(), pi.getValues(), options);
 	}

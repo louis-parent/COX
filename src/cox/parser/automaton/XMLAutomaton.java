@@ -9,7 +9,7 @@ import cox.model.document.SimpleXMLDocument;
 import cox.model.document.XMLDocument;
 import cox.model.element.XMLElement;
 import cox.model.element.XMLPCDataElement;
-import cox.model.pi.ProcessingInstruction;
+import cox.model.pi.XMLProcessingInstruction;
 import cox.parser.automaton.state.ContentState;
 import cox.parser.automaton.state.StartState;
 import cox.parser.automaton.state.XMLAutomatonState;
@@ -29,7 +29,7 @@ public class XMLAutomaton
 	private String encoding;
 	private Boolean standalone;
 	
-	private Collection<ProcessingInstruction> processingInstructions;
+	private Collection<XMLProcessingInstruction> processingInstructions;
 
 	private XMLAutomatonState state;
 
@@ -38,7 +38,7 @@ public class XMLAutomaton
 		this.version = null;
 		this.encoding = null;
 		this.standalone = null;
-		this.processingInstructions = new HashSet<ProcessingInstruction>();
+		this.processingInstructions = new HashSet<XMLProcessingInstruction>();
 		
 		
 		this.state = new StartState();
@@ -94,7 +94,7 @@ public class XMLAutomaton
 		}
 	}
 	
-	public void putProcessingInstruction(ProcessingInstruction pi) throws COXAutomatonException
+	public void putProcessingInstruction(XMLProcessingInstruction pi) throws COXAutomatonException
 	{
 		if(pi.getKey().equals("xml"))
 		{
@@ -174,7 +174,7 @@ public class XMLAutomaton
 		}
 	}
 	
-	private void parseXMLDeclaration(ProcessingInstruction pi) throws COXAutomatonException
+	private void parseXMLDeclaration(XMLProcessingInstruction pi) throws COXAutomatonException
 	{
 		for(String piValue : pi.getValues())
 		{

@@ -10,7 +10,7 @@ import cox.model.document.XMLDocument;
 import cox.model.element.XMLElement;
 import cox.model.element.XMLNodeElement;
 import cox.model.element.XMLPCDataElement;
-import cox.model.pi.SimpleProcessingInstruction;
+import cox.model.pi.XMLSimpleProcessingInstruction;
 import cox.writer.XMLOutputOptions;
 import cox.writer.XMLWriter;
 import jul.annotations.Test;
@@ -145,7 +145,7 @@ public class TestXMLWriter
 	public void testWriteDocumentWithCustomXMLDeclarationAndCustomProcessingInstruction()
 	{
 		XMLElement root = new XMLNodeElement("root");
-		SimpleXMLDocument document = new SimpleXMLDocument("1.1", "UTF-16", true, root, Arrays.asList(new SimpleProcessingInstruction("custom-key", Arrays.asList("custom-value"))));
+		SimpleXMLDocument document = new SimpleXMLDocument("1.1", "UTF-16", true, root, Arrays.asList(new XMLSimpleProcessingInstruction("custom-key", Arrays.asList("custom-value"))));
 		
 		asserts(that(XMLWriter.write(document, XMLOutputOptions.WRITE_DECLARATION)).hasToString("<?xml version=\"1.1\" encoding=\"UTF-16\" standalone=\"yes\"?><?custom-key custom-value?><root></root>"));
 	}
@@ -153,7 +153,7 @@ public class TestXMLWriter
 	public void testWriteDocumentWithIndentedCustomXMLDeclarationAndCustomProcessingInstruction()
 	{
 		XMLElement root = new XMLNodeElement("root");
-		SimpleXMLDocument document = new SimpleXMLDocument("1.1", "UTF-16", true, root, Arrays.asList(new SimpleProcessingInstruction("custom-key", Arrays.asList("custom-value"))));
+		SimpleXMLDocument document = new SimpleXMLDocument("1.1", "UTF-16", true, root, Arrays.asList(new XMLSimpleProcessingInstruction("custom-key", Arrays.asList("custom-value"))));
 		
 		asserts(that(XMLWriter.write(document, XMLOutputOptions.WRITE_DECLARATION, XMLOutputOptions.INDENT)).hasToString("<?xml version=\"1.1\" encoding=\"UTF-16\" standalone=\"yes\"?>\n<?custom-key custom-value?>\n<root>\n</root>"));
 	}

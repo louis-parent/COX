@@ -3,7 +3,7 @@ package cox.model.document;
 import java.util.Collection;
 
 import cox.model.element.XMLElement;
-import cox.model.pi.ProcessingInstruction;
+import cox.model.pi.XMLProcessingInstruction;
 
 public interface XMLDocument
 {
@@ -15,7 +15,7 @@ public interface XMLDocument
 	public abstract String getEncoding();
 	public abstract boolean isStandalone();
 	
-	public abstract Collection<ProcessingInstruction> getProcessingInstructions();
+	public abstract Collection<XMLProcessingInstruction> getProcessingInstructions();
 	
 	public abstract XMLElement getRoot();
 	

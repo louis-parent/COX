@@ -1,16 +1,16 @@
 package cox.parser.automaton.state;
 
 import cox.model.XMLCharaters;
-import cox.model.pi.ProcessingInstruction;
+import cox.model.pi.XMLProcessingInstruction;
 import cox.parser.automaton.XMLAutomaton;
 import cox.parser.exception.COXAutomatonException;
 import cox.parser.exception.parsing.InvalidProcessingInstructionEndException;
 
 public class ProcessingInstructionClosingState implements XMLAutomatonState
 {
-	private ProcessingInstruction pi;
+	private XMLProcessingInstruction pi;
 	
-	public ProcessingInstructionClosingState(ProcessingInstruction pi)
+	public ProcessingInstructionClosingState(XMLProcessingInstruction pi)
 	{
 		this.pi = pi;
 	}

@@ -13,8 +13,8 @@ import cox.model.document.XMLDocument;
 import cox.model.element.XMLElement;
 import cox.model.element.XMLNodeElement;
 import cox.model.element.XMLPCDataElement;
-import cox.model.pi.ProcessingInstruction;
-import cox.model.pi.SimpleProcessingInstruction;
+import cox.model.pi.XMLProcessingInstruction;
+import cox.model.pi.XMLSimpleProcessingInstruction;
 import jul.annotations.Test;
 import jul.annotations.TestSet;
 
@@ -124,14 +124,14 @@ public class TestXMLModel
 	@Test
 	public void testEmptyXMLProcessingInstruction()
 	{
-		ProcessingInstruction pi = new SimpleProcessingInstruction("key");
+		XMLProcessingInstruction pi = new XMLSimpleProcessingInstruction("key");
 		asserts(that(pi.getKey()).isEqualTo("key").and(that(pi.getValues()).isEmpty()));
 	}
 	
 	@Test
 	public void testXMLProcessingInstructionWithValues()
 	{
-		ProcessingInstruction pi = new SimpleProcessingInstruction("key", Arrays.asList("value1", "value2"));
+		XMLProcessingInstruction pi = new XMLSimpleProcessingInstruction("key", Arrays.asList("value1", "value2"));
 		asserts(that(pi.getKey()).isEqualTo("key").and(that(pi.getValues()).hasItem("value1")).and(that(pi.getValues()).hasItem("value2")));
 	}
 	
@@ -152,8 +152,8 @@ public class TestXMLModel
 	@Test
 	public void testXMLDocumentWithProcessingInstructions()
 	{
-		ProcessingInstruction pi1 = new SimpleProcessingInstruction("key1");
-		ProcessingInstruction pi2 = new SimpleProcessingInstruction("key2");
+		XMLProcessingInstruction pi1 = new XMLSimpleProcessingInstruction("key1");
+		XMLProcessingInstruction pi2 = new XMLSimpleProcessingInstruction("key2");
 		XMLDocument doc = new SimpleXMLDocument("1.0", "UTF-8", false, null, Arrays.asList(pi1, pi2));
 		
 		asserts(that(doc.getProcessingInstructions()).hasItem(pi1).and(that(doc.getProcessingInstructions()).hasItem(pi2)));

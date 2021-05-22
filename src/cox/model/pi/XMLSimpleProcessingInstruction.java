@@ -3,17 +3,17 @@ package cox.model.pi;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class SimpleProcessingInstruction implements ProcessingInstruction
+public class XMLSimpleProcessingInstruction implements XMLProcessingInstruction
 {
 	private String key;
 	private Collection<String> values;
 	
-	public SimpleProcessingInstruction(String key)
+	public XMLSimpleProcessingInstruction(String key)
 	{
 		this(key, new ArrayList<String>());
 	}
 		
-	public SimpleProcessingInstruction(String key, Collection<String> values)
+	public XMLSimpleProcessingInstruction(String key, Collection<String> values)
 	{
 		this.key = key;
 		this.values = values;

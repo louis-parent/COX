@@ -1,16 +1,16 @@
 package cox.parser.automaton.state;
 
 import cox.model.XMLCharaters;
-import cox.model.pi.SimpleProcessingInstruction;
+import cox.model.pi.XMLSimpleProcessingInstruction;
 import cox.parser.automaton.XMLAutomaton;
 import cox.parser.exception.COXAutomatonException;
 
 public class ProcessingInstructionValueState implements XMLAutomatonState
 {
-	private SimpleProcessingInstruction pi;
+	private XMLSimpleProcessingInstruction pi;
 	private String value;
 	
-	public ProcessingInstructionValueState(SimpleProcessingInstruction pi, char firstChar)
+	public ProcessingInstructionValueState(XMLSimpleProcessingInstruction pi, char firstChar)
 	{
 		this.pi = pi;
 		this.value = String.valueOf(firstChar);

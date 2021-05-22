@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import cox.model.element.XMLElement;
-import cox.model.pi.ProcessingInstruction;
+import cox.model.pi.XMLProcessingInstruction;
 
 public class SimpleXMLDocument implements XMLDocument
 {
@@ -12,7 +12,7 @@ public class SimpleXMLDocument implements XMLDocument
 	private String encoding;
 	private boolean standalone;
 	
-	private Collection<ProcessingInstruction> processingInstructions;
+	private Collection<XMLProcessingInstruction> processingInstructions;
 	
 	private XMLElement root;
 
@@ -26,7 +26,7 @@ public class SimpleXMLDocument implements XMLDocument
 		this(version, encoding, standalone, root, Collections.emptySet());
 	}
 	
-	public SimpleXMLDocument(String version, String encoding, boolean standalone, XMLElement root, Collection<ProcessingInstruction> processingInstructions)
+	public SimpleXMLDocument(String version, String encoding, boolean standalone, XMLElement root, Collection<XMLProcessingInstruction> processingInstructions)
 	{
 		this.version = version;
 		this.encoding = encoding;
@@ -55,18 +55,18 @@ public class SimpleXMLDocument implements XMLDocument
 		return this.standalone;
 	}
 	
-	public void addProcessingInstructions(Collection<ProcessingInstruction> pis)
+	public void addProcessingInstructions(Collection<XMLProcessingInstruction> pis)
 	{
 		this.processingInstructions.addAll(pis);
 	}
 	
-	public void addProcessingInstruction(ProcessingInstruction pi)
+	public void addProcessingInstruction(XMLProcessingInstruction pi)
 	{
 		this.processingInstructions.add(pi);
 	}
 	
 	@Override
-	public Collection<ProcessingInstruction> getProcessingInstructions()
+	public Collection<XMLProcessingInstruction> getProcessingInstructions()
 	{
 		return this.processingInstructions;
 	}

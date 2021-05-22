@@ -3,7 +3,7 @@ package cox.writer.stringifier;
 import java.util.Collection;
 
 import cox.model.document.XMLDocument;
-import cox.model.pi.ProcessingInstruction;
+import cox.model.pi.XMLProcessingInstruction;
 import cox.writer.XMLOutputOptions;
 
 public class XMLStringifier implements ParametrableXMLWriter
@@ -38,7 +38,7 @@ public class XMLStringifier implements ParametrableXMLWriter
 			{
 				declaration += new XMLProcessingInstructionStringifier(this.document, this.options).toString();
 				
-				for(ProcessingInstruction pi : this.document.getProcessingInstructions())
+				for(XMLProcessingInstruction pi : this.document.getProcessingInstructions())
 				{
 					declaration += new XMLProcessingInstructionStringifier(pi, this.options).toString();
 				}
