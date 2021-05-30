@@ -1,34 +1,32 @@
 package cox.parser.automaton.state;
 
 import cox.model.XMLCharaters;
-import cox.model.pi.XMLSimpleProcessingInstruction;
+import cox.model.document.element.XMLProcessingInstructionElement;
 import cox.parser.automaton.XMLAutomaton;
 import cox.parser.exception.COXAutomatonException;
-import cox.parser.exception.parsing.InvalidCharInProcessingInstruction;
 
 public class InProcessingInstructionState implements XMLAutomatonState
 {
-	private XMLSimpleProcessingInstruction pi;
+	private XMLProcessingInstructionElement pi;
+	private String content;
 	
-	public InProcessingInstructionState(XMLSimpleProcessingInstruction pi)
+	public InProcessingInstructionState(XMLProcessingInstructionElement pi)
 	{
 		this.pi = pi;
+		this.content = "";
 	}
 
 	@Override
 	public void read(XMLAutomaton automaton, char c) throws COXAutomatonException
 	{
-		if(XMLCharaters.isIdentifier(c))
+		if(c == XMLCharaters.PROCESSING_INSTRUCTION_DELIMITER.getChar())
 		{
-			automaton.changeState(new ProcessingInstructionValueState(this.pi, c));
-		}
-		else if(c == XMLCharaters.PROCESSING_INSTRUCTION_DELIMITER.getChar())
-		{
+			this.pi.setValue(this.content);
 			automaton.changeState(new ProcessingInstructionClosingState(this.pi));
 		}
-		else if(XMLCharaters.isWhitespace(c))
+		else
 		{
-			throw new InvalidCharInProcessingInstruction(c);
+			this.content += c;
 		}
 	}
 }

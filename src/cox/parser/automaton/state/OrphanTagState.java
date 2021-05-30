@@ -1,18 +1,19 @@
 package cox.parser.automaton.state;
 
 import cox.model.XMLCharaters;
-import cox.model.element.XMLNodeElement;
+import cox.model.document.element.XMLNodeElement;
 import cox.parser.automaton.XMLAutomaton;
 import cox.parser.exception.COXAutomatonException;
+import cox.parser.exception.parsing.MalformedIdentifierException;
 import cox.parser.exception.parsing.MissingOrphanTagEndException;
 
-public class OrphanTagState implements XMLAutomatonState
+public class OrphanTagState implements XMLAutomatonState, IdentifierParser
 {
 	private XMLNodeElement element;
 
-	public OrphanTagState(String name)
+	public OrphanTagState(String name) throws MalformedIdentifierException
 	{
-		this.element = new XMLNodeElement(name);
+		this.element = new XMLNodeElement(this.parseIdentifier(name));
 	}
 
 	public OrphanTagState(XMLNodeElement element)
@@ -25,8 +26,7 @@ public class OrphanTagState implements XMLAutomatonState
 	{
 		if(c == XMLCharaters.CLOSING_TAG.getChar())
 		{
-			automaton.putElement(this.element);
-			automaton.closeElement(this.element.getTagName());
+			automaton.openCloseElement(this.element);
 			automaton.changeState(new ContentState());
 		}
 		else

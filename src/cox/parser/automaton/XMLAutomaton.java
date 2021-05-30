@@ -2,14 +2,13 @@ package cox.parser.automaton;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.HashSet;
 
 import cox.model.document.SimpleXMLDocument;
 import cox.model.document.XMLDocument;
-import cox.model.element.XMLElement;
-import cox.model.element.XMLPCDataElement;
-import cox.model.pi.XMLProcessingInstruction;
+import cox.model.document.element.XMLElement;
+import cox.model.document.element.XMLProcessingInstructionElement;
+import cox.model.document.element.XMLTextElement;
+import cox.model.utils.XMLIdentifier;
 import cox.parser.automaton.state.ContentState;
 import cox.parser.automaton.state.StartState;
 import cox.parser.automaton.state.XMLAutomatonState;
@@ -29,25 +28,24 @@ public class XMLAutomaton
 	private String encoding;
 	private Boolean standalone;
 	
-	private Collection<XMLProcessingInstruction> processingInstructions;
-
 	private XMLAutomatonState state;
 
 	public XMLAutomaton(InputStream input) throws COXParserException
 	{
+		this.root = XMLElement.getEmptyNode();
+		this.currentElement = this.root;
+		
 		this.version = null;
 		this.encoding = null;
-		this.standalone = null;
-		this.processingInstructions = new HashSet<XMLProcessingInstruction>();
-		
+		this.standalone = null;		
 		
 		this.state = new StartState();
 		this.readAll(input);
 	}
 
-	public void putElement(XMLPCDataElement element) throws InvalidContentOutsideTagException
+	public void putText(XMLTextElement element) throws InvalidContentOutsideTagException
 	{
-		if(this.currentElement == null)
+		if(this.currentElement == this.root)
 		{
 			throw new InvalidContentOutsideTagException();
 		}
@@ -57,52 +55,41 @@ public class XMLAutomaton
 		}
 	}
 
-	public void putElement(XMLElement element)
+	public void openElement(XMLElement element)
 	{
-		if(this.root == null)
-		{
-			this.root = element;
-			this.currentElement = this.root;
-		}
-		else
-		{
-			this.currentElement.appendChild(element);
-			this.currentElement = element;
-		}
+		this.currentElement.appendChild(element);
+		this.currentElement = element;
 	}
 
 	public void closeElement(String tagName) throws COXAutomatonException
 	{
-		if(this.currentElement == null)
+		if(this.currentElement.getIdentifier().equals(tagName))
 		{
-			throw new MissingOpeningTagException(tagName);
+			this.currentElement = this.currentElement.getParent();
 		}
-		else if(this.currentElement.getTagName().equals(tagName))
-		{
-			if(this.currentElement.isRoot())
-			{
-				this.currentElement = null;
-			}
-			else
-			{
-				this.currentElement = this.currentElement.getParent();
-			}
+		else if(this.currentElement == this.root)
+		{			
+			throw new MissingOpeningTagException(tagName);
 		}
 		else
 		{
-			throw new MissingClosingTagException(tagName, this.currentElement.getTagName());
+			throw new MissingClosingTagException(tagName, this.currentElement.getIdentifier().toString());
 		}
 	}
 	
-	public void putProcessingInstruction(XMLProcessingInstruction pi) throws COXAutomatonException
+	public void openCloseElement(XMLElement element)
 	{
-		if(pi.getKey().equals("xml"))
+		this.currentElement.appendChild(element);
+	}
+	
+	public void putProcessingInstruction(XMLProcessingInstructionElement pi) throws COXAutomatonException
+	{
+		if(pi.getIdentifier().equals(new XMLIdentifier("xml")))
 		{
-			this.parseXMLDeclaration(pi);
+			this.parseXMLDeclaration(pi.getValue());
 		}
-		else
 		{
-			this.processingInstructions.add(pi);			
+			this.openCloseElement(pi);			
 		}
 	}
 
@@ -117,7 +104,7 @@ public class XMLAutomaton
 		String encoding = this.encoding != null ? this.encoding : XMLDocument.DEFAULT_ENCODING;
 		boolean standalone = this.standalone != null ? this.standalone : XMLDocument.DEFAULT_STANDALONE;
 		
-		return new SimpleXMLDocument(version, encoding, standalone, this.root, this.processingInstructions);
+		return new SimpleXMLDocument(version, encoding, standalone, this.root);
 	}
 
 	private void readAll(InputStream input) throws COXParserException
@@ -151,9 +138,9 @@ public class XMLAutomaton
 				}
 			}
 
-			if(this.currentElement != null)
+			if(this.currentElement != this.root)
 			{
-				throw new COXParserException("The tag " + this.currentElement.getTagName() + " is never closed", (char) c, currentLine, currentChar);
+				throw new COXParserException("The tag " + this.currentElement.getIdentifier() + " is never closed", (char) c, currentLine, currentChar);
 			}
 			else if(this.state instanceof ContentState)
 			{
@@ -174,9 +161,9 @@ public class XMLAutomaton
 		}
 	}
 	
-	private void parseXMLDeclaration(XMLProcessingInstruction pi) throws COXAutomatonException
+	private void parseXMLDeclaration(String piContent) throws COXAutomatonException
 	{
-		for(String piValue : pi.getValues())
+		for(String piValue : piContent.split(" "))
 		{
 			String[] splitted = piValue.split("=");
 			

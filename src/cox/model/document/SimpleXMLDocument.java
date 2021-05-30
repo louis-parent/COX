@@ -1,19 +1,13 @@
 package cox.model.document;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import cox.model.element.XMLElement;
-import cox.model.pi.XMLProcessingInstruction;
+import cox.model.document.element.XMLElement;
 
 public class SimpleXMLDocument implements XMLDocument
 {
 	private String version;
 	private String encoding;
 	private boolean standalone;
-	
-	private Collection<XMLProcessingInstruction> processingInstructions;
-	
+		
 	private XMLElement root;
 
 	public SimpleXMLDocument(XMLElement root)
@@ -23,18 +17,11 @@ public class SimpleXMLDocument implements XMLDocument
 	
 	public SimpleXMLDocument(String version, String encoding, boolean standalone, XMLElement root)
 	{
-		this(version, encoding, standalone, root, Collections.emptySet());
-	}
-	
-	public SimpleXMLDocument(String version, String encoding, boolean standalone, XMLElement root, Collection<XMLProcessingInstruction> processingInstructions)
-	{
 		this.version = version;
 		this.encoding = encoding;
 		this.standalone = standalone;
 		
 		this.root = root;
-		
-		this.processingInstructions = processingInstructions;
 	}
 
 	@Override
@@ -53,22 +40,6 @@ public class SimpleXMLDocument implements XMLDocument
 	public boolean isStandalone()
 	{
 		return this.standalone;
-	}
-	
-	public void addProcessingInstructions(Collection<XMLProcessingInstruction> pis)
-	{
-		this.processingInstructions.addAll(pis);
-	}
-	
-	public void addProcessingInstruction(XMLProcessingInstruction pi)
-	{
-		this.processingInstructions.add(pi);
-	}
-	
-	@Override
-	public Collection<XMLProcessingInstruction> getProcessingInstructions()
-	{
-		return this.processingInstructions;
 	}
 
 	@Override

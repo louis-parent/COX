@@ -1,12 +1,12 @@
 package cox.parser.automaton.state;
 
 import cox.model.XMLCharaters;
-import cox.model.pi.XMLSimpleProcessingInstruction;
+import cox.model.document.element.XMLProcessingInstructionElement;
 import cox.parser.automaton.XMLAutomaton;
 import cox.parser.exception.COXAutomatonException;
 import cox.parser.exception.parsing.InvalidProcessingInstructionStartException;
 
-public class ProcessingInstructionKeyState implements XMLAutomatonState
+public class ProcessingInstructionKeyState implements XMLAutomatonState, IdentifierParser
 {
 	private String key;
 	
@@ -24,7 +24,7 @@ public class ProcessingInstructionKeyState implements XMLAutomatonState
 		}
 		else if(XMLCharaters.isWhitespace(c))
 		{
-			automaton.changeState(new InProcessingInstructionState(new XMLSimpleProcessingInstruction(this.key)));
+			automaton.changeState(new InProcessingInstructionState(new XMLProcessingInstructionElement(this.parseIdentifier(this.key))));
 		}
 		else
 		{

@@ -1,11 +1,12 @@
 package cox.parser.automaton.state;
 
 import cox.model.XMLCharaters;
-import cox.model.element.XMLNodeElement;
+import cox.model.document.element.XMLNodeElement;
 import cox.parser.automaton.XMLAutomaton;
+import cox.parser.exception.COXAutomatonException;
 import cox.parser.exception.parsing.MalformedTagNameException;
 
-public class OpenTagNameState implements XMLAutomatonState
+public class OpenTagNameState implements XMLAutomatonState, IdentifierParser
 {
 	private String name;
 
@@ -15,7 +16,7 @@ public class OpenTagNameState implements XMLAutomatonState
 	}
 
 	@Override
-	public void read(XMLAutomaton automaton, char c) throws MalformedTagNameException
+	public void read(XMLAutomaton automaton, char c) throws COXAutomatonException
 	{
 		if(XMLCharaters.isIdentifier(c))
 		{
@@ -23,7 +24,7 @@ public class OpenTagNameState implements XMLAutomatonState
 		}
 		else if(c == XMLCharaters.CLOSING_TAG.getChar())
 		{
-			automaton.putElement(new XMLNodeElement(this.name));
+			automaton.openElement(new XMLNodeElement(this.parseIdentifier(this.name)));
 			automaton.changeState(new ContentState());
 		}
 		else if(c == XMLCharaters.CLOSING_TAG_MARKER.getChar())
@@ -32,7 +33,7 @@ public class OpenTagNameState implements XMLAutomatonState
 		}
 		else if(XMLCharaters.isWhitespace(c))
 		{
-			automaton.changeState(new InOpenTagState(new XMLNodeElement(this.name)));
+			automaton.changeState(new InOpenTagState(new XMLNodeElement(this.parseIdentifier(this.name))));
 		}
 		else
 		{

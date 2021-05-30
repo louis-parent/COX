@@ -1,7 +1,7 @@
 package cox.parser.automaton.state;
 
 import cox.model.XMLCharaters;
-import cox.model.element.XMLNodeElement;
+import cox.model.document.element.XMLNodeElement;
 import cox.parser.automaton.XMLAutomaton;
 import cox.parser.exception.parsing.InvalidCharInTagException;
 
@@ -23,7 +23,7 @@ public class InOpenTagState implements XMLAutomatonState
 		}
 		else if(c == XMLCharaters.CLOSING_TAG.getChar())
 		{
-			automaton.putElement(this.element);
+			automaton.openElement(this.element);
 			automaton.changeState(new ContentState());
 		}
 		else if(c == XMLCharaters.CLOSING_TAG_MARKER.getChar())

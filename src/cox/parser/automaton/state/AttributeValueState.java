@@ -1,9 +1,9 @@
 package cox.parser.automaton.state;
 
 import cox.model.XMLCharaters;
-import cox.model.attribute.SimpleXMLAttribute;
-import cox.model.element.XMLNodeElement;
+import cox.model.document.element.XMLNodeElement;
 import cox.parser.automaton.XMLAutomaton;
+import cox.parser.exception.parsing.DuplicateAttributeNameException;
 
 public class AttributeValueState implements XMLAutomatonState
 {
@@ -18,12 +18,20 @@ public class AttributeValueState implements XMLAutomatonState
 	}
 
 	@Override
-	public void read(XMLAutomaton automaton, char c)
+	public void read(XMLAutomaton automaton, char c) throws DuplicateAttributeNameException
 	{
 		if(c == XMLCharaters.ATTRIBUTE_DELIMITER.getChar())
 		{
-			this.element.addAttribute(new SimpleXMLAttribute(this.name, this.value));
-			automaton.changeState(new InOpenTagState(this.element));
+			boolean added = this.element.addAttribute(this.name, this.value);
+			
+			if(added)
+			{
+				automaton.changeState(new InOpenTagState(this.element));
+			}
+			else
+			{
+				throw new DuplicateAttributeNameException(this.name);
+			}
 		}
 		else
 		{

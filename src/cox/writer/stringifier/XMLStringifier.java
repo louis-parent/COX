@@ -3,10 +3,10 @@ package cox.writer.stringifier;
 import java.util.Collection;
 
 import cox.model.document.XMLDocument;
-import cox.model.pi.XMLProcessingInstruction;
 import cox.writer.XMLOutputOptions;
+import cox.writer.stringifier.element.XMLDocumentStringifier;
 
-public class XMLStringifier implements ParametrableXMLWriter
+public class XMLStringifier implements ParametrableXMLStringifier
 {
 	private XMLDocument document;
 	private Collection<XMLOutputOptions> options;
@@ -26,25 +26,19 @@ public class XMLStringifier implements ParametrableXMLWriter
 	@Override
 	public String toString()
 	{
+		return this.toString(0);
+	}
+	
+	@Override
+	public String toString(int depth)
+	{
 		if(this.document.isEmpty())
 		{
 			return "";
 		}
 		else
 		{
-			String declaration = "";
-			
-			if(this.hasToWriteDeclaration())
-			{
-				declaration += new XMLProcessingInstructionStringifier(this.document, this.options).toString();
-				
-				for(XMLProcessingInstruction pi : this.document.getProcessingInstructions())
-				{
-					declaration += new XMLProcessingInstructionStringifier(pi, this.options).toString();
-				}
-			}
-			
-			return declaration + new XMLElementStringifier(document.getRoot(), this.options).toString();
-		}
+			return new XMLDocumentStringifier(this.document, this.getOptions()).toString(depth);
+		}		
 	}
 }

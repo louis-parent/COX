@@ -1,7 +1,7 @@
 package cox.parser.automaton.state;
 
 import cox.model.XMLCharaters;
-import cox.model.element.XMLPCDataElement;
+import cox.model.document.element.XMLTextElement;
 import cox.parser.automaton.XMLAutomaton;
 import cox.parser.exception.parsing.InvalidContentOutsideTagException;
 
@@ -16,7 +16,7 @@ public class ContentState implements XMLAutomatonState
 		{
 			if(this.hasData())
 			{
-				automaton.putElement(new XMLPCDataElement(this.content.trim()));
+				automaton.putText(new XMLTextElement(this.content));
 			}
 
 			automaton.changeState(new EnterTagState());

@@ -1,9 +1,6 @@
 package cox.model.document;
 
-import java.util.Collection;
-
-import cox.model.element.XMLElement;
-import cox.model.pi.XMLProcessingInstruction;
+import cox.model.document.element.XMLElement;
 
 public interface XMLDocument
 {
@@ -14,23 +11,21 @@ public interface XMLDocument
 	public abstract String getVersion();
 	public abstract String getEncoding();
 	public abstract boolean isStandalone();
-	
-	public abstract Collection<XMLProcessingInstruction> getProcessingInstructions();
-	
+		
 	public abstract XMLElement getRoot();
 	
 	public default boolean isEmpty()
 	{
-		return this.getRoot() == null;
+		return this.getRoot().isLeaf();
 	}
 
 	public default boolean equals(XMLDocument doc)
 	{
-		return this.getRoot().equals(doc.getRoot());
+		return this.getRoot().equals(doc.getRoot()) && this.getVersion().equals(doc.getVersion()) && this.getEncoding().equals(doc.getEncoding()) && this.isStandalone() == doc.isStandalone();
 	}
 	
 	public static XMLDocument getEmpty()
 	{
-		return new SimpleXMLDocument(null);
+		return new SimpleXMLDocument(XMLElement.getEmptyNode());
 	}
 }

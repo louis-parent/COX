@@ -3,6 +3,7 @@ package cox.parser.automaton.state;
 import cox.model.XMLCharaters;
 import cox.parser.automaton.XMLAutomaton;
 import cox.parser.exception.COXAutomatonException;
+import cox.parser.exception.parsing.MalformedEndCloseTagException;
 
 public class InCloseTagState implements XMLAutomatonState
 {
@@ -23,6 +24,7 @@ public class InCloseTagState implements XMLAutomatonState
 		}
 		else if(!XMLCharaters.isWhitespace(c))
 		{
+			throw new MalformedEndCloseTagException(c);
 		}
 	}
 
