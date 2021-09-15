@@ -21,6 +21,10 @@ public class EnterTagState implements XMLAutomatonState
 		{
 			automaton.changeState(new ProcessingInstructionKeyState());
 		}
+		else if(c == XMLCharaters.COMMENT_DELIMITER.getChar())
+		{
+			automaton.changeState(new CommentOpeningState());
+		}
 		else
 		{
 			throw new InvalidTagStartException();

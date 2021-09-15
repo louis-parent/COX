@@ -5,6 +5,7 @@ import static jul.nla.Asserts.not;
 import static jul.nla.Asserts.that;
 
 import cox.model.document.XMLDocument;
+import cox.model.document.element.XMLCommentElement;
 import cox.model.document.element.XMLElement;
 import cox.model.document.element.XMLNodeElement;
 import cox.parser.COXParser;
@@ -103,5 +104,30 @@ public class TestXMLParsing
 		asserts(that(doc.getVersion()).isEqualTo("1.1")
 				.and(that(doc.getEncoding()).isEqualTo("UTF-16"))
 				.and(that(doc.isStandalone()).isEqualTo(true)));
+	}
+	
+	@Test
+	public void testMinimalComment() throws COXParserException
+	{
+		XMLDocument doc = COXParser.parse("<!-- Minimal comment -->");
+		
+		XMLElement docRoot = XMLElement.getEmptyNode();
+		new XMLCommentElement(docRoot, " Minimal comment ");
+		
+		asserts(that(doc.getRoot().descendingEquals(docRoot)).isEqualTo(true));
+	}
+	
+	@Test
+	public void testComplexComment() throws COXParserException
+	{
+		XMLDocument doc = COXParser.parse("<root><!-- First comment --><item><!-- Second comment --></item></root>");
+		
+		XMLElement docRoot = XMLElement.getEmptyNode();
+		XMLElement root = new XMLNodeElement(docRoot, "root");
+		new XMLCommentElement(root, " First comment ");
+		XMLElement item = new XMLNodeElement(root, "item");
+		new XMLCommentElement(item, " Second comment ");
+		
+		asserts(that(doc.getRoot().descendingEquals(docRoot)).isEqualTo(true));
 	}
 }
